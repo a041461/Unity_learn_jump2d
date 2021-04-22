@@ -12,6 +12,13 @@ public class GameManager : MonoBehaviour
     float totalWeight;
     float currentPosition = -3f;
     public float ScreenDistance;
+    public GameObject floor;
+    public int score;
+    Vector3 initCameraPosition;
+    public bool isGamePaused = true;
+    public bool isGameOver;
+    public GUIControl gui;
+    public GUIText scoretext;
 
 
     Queue<GameObject> tilePool = new Queue<GameObject>();
@@ -32,12 +39,33 @@ public class GameManager : MonoBehaviour
             GenerateEnemy();
             GenerateItem();
         }
+        pauseGame();
+        initCameraPosition = Camera.main.transform.position;
+
+    }
+
+    public void pauseGame()
+    {
+        isGamePaused = true;
+    }
+
+    public void resumeGame()
+    {
+        isGamePaused = false;
+    }
+
+    public void endGame() {
+        isGameOver = true;
+        
+        Camera.main.transform.position = initCameraPosition;
+        gui.ShowGameOverPanel();
+
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        scoretext.text = score.ToString();
     }
 
     void getTotalProbabilityWeight()
@@ -127,7 +155,7 @@ public class GameManager : MonoBehaviour
         if (rand < gameSettings.itemAppearProbability)
         {
             GameObject go = getInactiveItem();
-            go.tag = "ItemType" + Random.Range(0, 2);
+            go.tag = "ItemType" + Random.Range(0, 3);
             go.transform.position = tmpPos;
             go.SetActive(true);
         }
@@ -170,6 +198,29 @@ public class GameManager : MonoBehaviour
             go.name = "Item" + i;
             itemPool.Enqueue(go);
         }
+    }
+
+    public void addInactiveItems(GameObject inactiveItem)
+    {
+        inactiveItem.SetActive(false);
+        itemPool.Enqueue(inactiveItem);
+        GenerateItem();
+       
+    }
+
+    public void addInactiveEnemy(GameObject inactiveItem)
+    {
+        inactiveItem.SetActive(false);
+        enemyPool.Enqueue(inactiveItem);
+        GenerateEnemy();
+    }
+
+    public void addInactiveTile(GameObject inactiveItem)
+    {
+        inactiveItem.SetActive(false);
+        tilePool.Enqueue(inactiveItem);
+        GenerateTile();
+        score += 5;
     }
 
 

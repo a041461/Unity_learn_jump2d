@@ -8,6 +8,7 @@ public class Player : MonoBehaviour
     float leftBorder;
     float rightBorder;
     SpriteRenderer thisRender;
+    public GameManager GM;
 
     // Start is called before the first frame update
     void Start()
@@ -59,9 +60,13 @@ public class Player : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.name.Contains("platform"))
+        if (collision.name.Contains("platform") || collision.tag.Contains("Tile"))
         {
             jump(1);
+        }
+        else if (collision.name.Contains("floor")&&this.transform.position.y<collision.transform.position.y+1)
+        {
+            GM.endGame();
         }
     }
 

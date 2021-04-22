@@ -75,6 +75,10 @@ public class Tile : MonoBehaviour
                 break;
 
         }
+        if (GM.floor.transform.position.y > this.transform.position.y + 1)
+        {
+            GM.addInactiveTile(this.gameObject);
+        }
 
     }
 }
